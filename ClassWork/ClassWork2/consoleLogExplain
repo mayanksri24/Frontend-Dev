@@ -1,0 +1,5 @@
+console.log(5 == "5") checks the value and not the type
+    Here it will return TURE because 5 is equal to 5
+
+console.log(5 === "5") checks value as well as the type of variable
+    for exaple here it will return a FALSE as 5 is an integer and "5" is a stringify.
