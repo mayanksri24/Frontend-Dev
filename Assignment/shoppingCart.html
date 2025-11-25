@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Shopping Cart</h2>
+
+<label>Item Name:</label>
+<input type="text" id="item"><br><br>
+
+<label>Price:</label>
+<input type="number" id="price"><br><br>
+
+<label>Quantity:</label>
+<input type="number" id="qty"><br><br>
+
+<button onclick="addItem()">Add Item</button>
+
+<h3>Apply Coupon</h3>
+<input type="text" id="coupon" placeholder="SAVE20 / DISC10"><br><br>
+<button onclick="checkout()">Checkout</button>
+
+<h3 id="output"></h3>
+
+<script>
+class Cart {
+  constructor() {
+    this.items = [];
+  }
+
+  addItem(name, price, qty) {
+    this.items.push({ name, price, qty });
+  }
+
+  getTotal() {
+    return this.items.reduce((sum, i) => sum + i.price * i.qty, 0);
+  }
+
+  applyCoupon(code) {
+    let pat = /^(SAVE|DISC)(\d{1,2})$/;
+    let match = code.match(pat);
+    if (match) {
+      return parseInt(match[2]);
+    }
+    return 0;
+  }
+}
+
+let cart = new Cart();
+
+function addItem() {
+  let name = document.getElementById("item").value;
+  let price = Number(document.getElementById("price").value);
+  let qty = Number(document.getElementById("qty").value);
+  cart.addItem(name, price, qty);
+  document.getElementById("output").innerText = "Item Added!";
+}
+
+function checkout() {
+  let total = cart.getTotal();
+  let code = document.getElementById("coupon").value;
+  let discount = cart.applyCoupon(code);
+  let finalTotal = total - (total * discount / 100);
+
+  document.getElementById("output").innerText =
+    `Total: ₹${total}\nDiscount: ${discount}%\nFinal Total: ₹${finalTotal}`;
+}
+</script>
+
+</body>
+</html>
