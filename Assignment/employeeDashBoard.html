@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Employee Status Dashboard</title>
+
+<style>
+    body { font-family: Arial; padding: 40px; }
+    .emp { display: flex; justify-content: space-between; align-items: center; 
+           padding: 12px; border: 1px solid #ccc; border-radius: 6px; 
+           margin-bottom: 10px; width: 350px; }
+    .active { color: green; font-weight: bold; }
+    .inactive { color: red; font-weight: bold; }
+    .error { color: red; margin-top: 10px; display: none; }
+    button { padding: 6px 12px; cursor: pointer; }
+</style>
+</head>
+
+<body>
+
+<h2>Employee Status Dashboard</h2>
+
+<div id="empList"></div>
+<div id="error" class="error">Failed to update status. Please try again.</div>
+
+<script>
+function loadEmployees() {
+    let xhr = new XMLHttpRequest();
+    xhr.open("GET", "http://localhost:3002/employees");
+    xhr.onload = function() {
+        let data = JSON.parse(xhr.responseText);
+        let box = document.getElementById("empList");
+        box.innerHTML = "";
+
+        data.forEach(emp => {
+            let div = document.createElement("div");
+            div.className = "emp";
+
+            let statusClass = emp.status === "active" ? "active" : "inactive";
+
+            div.innerHTML = `
+                <span>${emp.name} — <b class="${statusClass}" id="status-${emp.id}">${emp.status}</b></span>
+                <button onclick="toggleStatus(${emp.id}, '${emp.status}')">Toggle</button>
+            `;
+
+            box.appendChild(div);
+        });
+    };
+    xhr.send();
+}
+
+function toggleStatus(id, currentStatus) {
+    let newStatus = currentStatus === "active" ? "inactive" : "active";
+
+    let statusEl = document.getElementById("status-" + id);
+    let previousStatus = currentStatus;
+
+    statusEl.textContent = newStatus;
+    statusEl.className = newStatus;
+
+    let xhr = new XMLHttpRequest();
+    xhr.open("PATCH", "http://localhost:3002/employees/" + id);
+    xhr.setRequestHeader("Content-Type", "application/json");
+
+    xhr.onload = function() {
+        if (xhr.status < 200 || xhr.status >= 300) {
+            statusEl.textContent = previousStatus;
+            statusEl.className = previousStatus;
+            document.getElementById("error").style.display = "block";
+        }
+    };
+
+    xhr.onerror = function() {
+        statusEl.textContent = previousStatus;
+        statusEl.className = previousStatus;
+        document.getElementById("error").style.display = "block";
+    };
+
+    xhr.send(JSON.stringify({ status: newStatus }));
+}
+
+loadEmployees();
+</script>
+
+</body>
+</html>

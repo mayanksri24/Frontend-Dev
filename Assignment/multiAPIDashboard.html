@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Multi-API Dashboard</title>
+
+<style>
+    body { font-family: Arial; padding: 40px; }
+    .box { width: 250px; padding: 20px; border: 1px solid #ccc; 
+           border-radius: 10px; margin-bottom: 15px; }
+    .skeleton { background: #eee; height: 25px; width: 120px; border-radius: 6px; margin: 8px 0; }
+    #warning { color: red; font-weight: bold; display: none; margin-top: 15px; }
+</style>
+</head>
+
+<body>
+
+<h2>Multi-API Dashboard</h2>
+
+<div class="box">
+    <h3>Total Users</h3>
+    <div id="users" class="skeleton"></div>
+</div>
+
+<div class="box">
+    <h3>Total Orders</h3>
+    <div id="orders" class="skeleton"></div>
+</div>
+
+<div class="box">
+    <h3>Total Products</h3>
+    <div id="products" class="skeleton"></div>
+</div>
+
+<div id="warning">Some data could not be loaded.</div>
+
+<script>
+function loadDashboard() {
+    let usersReq = fetch("http://localhost:3004/users").then(r => r.json());
+    let ordersReq = fetch("http://localhost:3004/orders").then(r => r.json());
+    let productsReq = fetch("http://localhost:3004/products").then(r => r.json());
+
+    Promise.all([usersReq, ordersReq, productsReq])
+        .then(([users, orders, products]) => {
+            document.getElementById("users").textContent = users.length;
+            document.getElementById("orders").textContent = orders.length;
+            document.getElementById("products").textContent = products.length;
+        })
+        .catch(() => {
+            document.getElementById("warning").style.display = "block";
+            document.getElementById("users").textContent = "—";
+            document.getElementById("orders").textContent = "—";
+            document.getElementById("products").textContent = "—";
+        });
+}
+
+loadDashboard();
+</script>
+
+</body>
+</html>

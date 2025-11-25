@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>User Registration (Axios)</title>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<style>
+    body { font-family: Arial; padding: 40px; }
+    input { display: block; width: 280px; margin-bottom: 12px; padding: 10px; border-radius: 6px; border: 1px solid #aaa; }
+    button { padding: 10px 14px; cursor: pointer; }
+    #msg { margin-top: 15px; font-weight: bold; }
+    .error { color: red; }
+    .success { color: green; }
+</style>
+</head>
+
+<body>
+
+<h2>User Registration</h2>
+
+<input type="text" id="name" placeholder="Enter Name">
+<input type="email" id="email" placeholder="Enter Email">
+<input type="password" id="password" placeholder="Enter Password">
+
+<button id="register">Register</button>
+
+<div id="msg"></div>
+
+<script>
+document.getElementById("register").addEventListener("click", function(){
+
+    let name = document.getElementById("name").value.trim();
+    let email = document.getElementById("email").value.trim();
+    let pass = document.getElementById("password").value.trim();
+    let msg = document.getElementById("msg");
+
+    msg.textContent = "";
+    msg.className = "";
+
+    axios.get("http://localhost:3006/users?email=" + email)
+        .then(res => {
+            if(res.data.length > 0) {
+                msg.textContent = "Email already registered.";
+                msg.className = "error";
+            } else {
+                axios.post("http://localhost:3006/users", {
+                    name: name,
+                    email: email,
+                    password: pass
+                }).then(() => {
+                    msg.textContent = "Registration Successful!";
+                    msg.className = "success";
+                });
+            }
+        });
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Task Manager With Filters</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<style>
+    body { font-family: Arial; padding: 40px; }
+    #filter { padding: 8px; margin-bottom: 20px; }
+    .task { padding: 12px; border: 1px solid #ccc; margin-bottom: 10px; border-radius: 6px; }
+    .done { text-decoration: line-through; color: green; }
+</style>
+</head>
+
+<body>
+
+<h2>Task Manager</h2>
+
+<select id="filter">
+    <option value="">All Tasks</option>
+    <option value="low">Low Priority</option>
+    <option value="medium">Medium Priority</option>
+    <option value="high">High Priority</option>
+    <option value="completed">Completed</option>
+</select>
+
+<div id="taskList"></div>
+
+<script>
+function loadTasks(filter="") {
+    let url = "http://localhost:3003/tasks";
+
+    if(filter === "completed") {
+        url += "?completed=true";
+    } 
+    else if(filter !== "") {
+        url += "?priority=" + filter;
+    }
+
+    $.ajax({
+        url: url,
+        method: "GET",
+        success: function(data){
+            $("#taskList").empty();
+            data.forEach(task => {
+                $("#taskList").append(`
+                    <div class="task ${task.completed ? 'done' : ''}">
+                        <input type="checkbox" onchange="toggleTask(${task.id}, ${task.completed})" ${task.completed ? "checked" : ""}>
+                        <b>${task.title}</b> — Priority: ${task.priority}
+                    </div>
+                `);
+            });
+        }
+    });
+}
+
+function toggleTask(id, completed) {
+    $.ajax({
+        url: "http://localhost:3003/tasks/" + id,
+        method: "PATCH",
+        contentType: "application/json",
+        data: JSON.stringify({ completed: !completed }),
+        success: function(){
+            loadTasks($("#filter").val());
+        }
+    });
+}
+
+$("#filter").change(function(){
+    loadTasks($(this).val());
+});
+
+loadTasks();
+</script>
+
+</body>
+</html>
