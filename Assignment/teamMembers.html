@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Team Members Directory</title>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <style>
+    body { font-family: Arial, sans-serif; padding: 30px; background:#f7f8fb; }
+    header h1 { margin-bottom: 10px; }
+    .controls { margin-bottom: 15px; }
+    button { padding:8px 12px; margin-right:8px; cursor:pointer; }
+    .departments { display: grid; grid-template-columns: repeat(auto-fit,minmax(320px,1fr)); gap:16px; }
+    .department { background:#fff; border:1px solid #e0e6ef; border-radius:10px; padding:14px; }
+    .dept-title { font-size:18px; font-weight:700; margin-bottom:10px; cursor:pointer; }
+    .manager { font-weight:700; margin:6px 0; cursor:pointer; color:#0b3d91; }
+    .employee { margin:4px 0 4px 14px; padding:6px 8px; border-radius:6px; cursor:pointer; }
+    .contact { display:none; margin:4px 0 8px 28px; font-size:13px; color:#444; }
+    .highlight { background:#e6f0ff; }
+    .dept-highlight { background:#fff7e6; }
+    .sibling-highlight { outline:2px dashed #ffcc00; }
+    footer { margin-top:20px; color:#666; font-size:13px; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Team Members Directory</h1>
+    <p>Click managers, hover employees, click departments, pick random, collapse/expand teams.</p>
+  </header>
+
+  <main>
+    <div class="controls" role="region" aria-label="controls">
+      <button id="random">Select Random Employee</button>
+      <button id="collapse-all">Collapse All Teams</button>
+      <button id="expand-all">Expand All Teams</button>
+    </div>
+
+    <section class="departments">
+
+      <article class="department" data-dept="engineering">
+        <div class="dept-title">Engineering</div>
+        <div class="manager">Aarav — Engineering Manager</div>
+        <div class="employee">Rohit — Frontend</div>
+        <div class="contact">Email: rohit@example.com • Ext: 101</div>
+        <div class="employee">Sneha — Backend</div>
+        <div class="contact">Email: sneha@example.com • Ext: 102</div>
+        <div class="employee">Tara — QA</div>
+        <div class="contact">Email: tara@example.com • Ext: 103</div>
+      </article>
+
+      <article class="department" data-dept="product">
+        <div class="dept-title">Product</div>
+        <div class="manager">Priya — Product Manager</div>
+        <div class="employee">Karan — PM Associate</div>
+        <div class="contact">Email: karan@example.com • Ext: 201</div>
+        <div class="employee">Maya — UX Designer</div>
+        <div class="contact">Email: maya@example.com • Ext: 202</div>
+        <div class="employee">Varun — Data Analyst</div>
+        <div class="contact">Email: varun@example.com • Ext: 203</div>
+      </article>
+
+      <article class="department" data-dept="hr">
+        <div class="dept-title">Human Resources</div>
+        <div class="manager">Sunita — HR Head</div>
+        <div class="employee">Neha — Recruiter</div>
+        <div class="contact">Email: neha@example.com • Ext: 301</div>
+        <div class="employee">Aditi — Coordinator</div>
+        <div class="contact">Email: aditi@example.com • Ext: 302</div>
+      </article>
+
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2025 Team Directory</p>
+  </footer>
+
+<script>
+  $(function(){
+
+    $(".manager").click(function(){
+      $(".employee").removeClass("highlight");
+      let mgr = $(this);
+      let directReports = mgr.nextUntil(".manager, .dept-title").filter(".employee");
+      directReports.addClass("highlight");
+    });
+
+    $(".employee").hover(
+      function(){ $(this).next(".contact").show(); },
+      function(){ $(this).next(".contact").hide(); }
+    );
+
+    $(".department").click(function(e){
+      if($(e.target).is(".employee, .manager, .contact")) return;
+      $(".department").find(".dept-highlight").removeClass("dept-highlight");
+      $(this).children().addClass("dept-highlight");
+    });
+
+    $("#random").click(function(){
+      let allEmployees = $(".employee");
+      $(".employee").removeClass("highlight sibling-highlight");
+      if(allEmployees.length===0) return;
+      let rnd = Math.floor(Math.random()*allEmployees.length);
+      let picked = allEmployees.eq(rnd);
+      picked.addClass("highlight");
+      picked.siblings(".employee").addClass("sibling-highlight");
+    });
+
+    $("#collapse-all").click(function(){
+      $(".departments").children().each(function(){
+        $(this).find(".employee, .contact, .manager").slideUp();
+      });
+    });
+
+    $("#expand-all").click(function(){
+      $(".departments").children().each(function(){
+        $(this).find(".manager, .employee, .contact").slideDown();
+      });
+    });
+
+    $(".dept-title").click(function(e){
+      e.stopPropagation();
+      let dept = $(this).parent();
+      dept.find(".manager, .employee, .contact").slideToggle();
+    });
+
+    $(document).on("click", function(e){
+      if(!$(e.target).closest(".department").length){
+        $(".department").find(".dept-highlight").removeClass("dept-highlight");
+      }
+    });
+
+  });
+</script>
+
+</body>
+</html>

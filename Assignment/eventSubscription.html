@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Event Subscription Panel</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<style>
+    body { font-family: Arial; padding:40px; }
+    .panel { width:400px; background:#f5f5f5; padding:20px; border-radius:10px; }
+    .topic { padding:10px; background:#fff; border:1px solid #ccc; margin-bottom:8px; border-radius:8px; cursor:pointer; }
+    .subscribed { background:#e6ffe6; border-color:green; }
+    #message { margin-top:15px; padding:10px; display:none; border-radius:6px; }
+    #message.success { background:#e6ffe6; color:#0a6b0a; }
+    input, button { padding:8px; margin-top:8px; }
+</style>
+</head>
+
+<body>
+
+<h1>Event Subscription Panel</h1>
+
+<div class="panel">
+
+    <h3>Topics</h3>
+    <div id="topics">
+        <div class="topic" data-name="Tech Updates">Tech Updates</div>
+        <div class="topic" data-name="Offers">Offers</div>
+        <div class="topic" data-name="Newsletter">Newsletter</div>
+    </div>
+
+    <button id="unsubscribe">Unsubscribe All</button>
+    <button id="remove-one">Remove Selected Topic Action</button>
+
+    <hr>
+
+    <input type="text" id="newTopic" placeholder="Add new topic...">
+    <button id="addTopic">Add Topic</button>
+
+    <div id="message"></div>
+
+</div>
+
+<script>
+$(function(){
+
+    $(document).on("click",".topic",function(){
+        $(this).toggleClass("subscribed");
+        show("Subscription updated");
+    });
+
+    $("#unsubscribe").click(function(){
+        $(".topic").removeClass("subscribed");
+        show("You unsubscribed from all topics");
+    });
+
+    $("#addTopic").click(function(){
+        let name = $("#newTopic").val().trim();
+        if(name==="") return;
+        $("#topics").append(`<div class="topic" data-name="${name}">${name}</div>`);
+        $("#newTopic").val("");
+        show("New topic added");
+    });
+
+    $("#remove-one").click(function(){
+        $(".topic").off("click");
+        show("Click event removed — cannot toggle now");
+    });
+
+    function show(msg){
+        $("#message").text(msg).addClass("success").fadeIn(200).delay(1200).fadeOut(300);
+    }
+
+});
+</script>
+
+</body>
+</html>

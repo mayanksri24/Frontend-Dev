@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Multi jQuery Widgets</title>
+
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script>
+    var jq1 = jQuery.noConflict(true);
+</script>
+
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+<script>
+    var jq2 = jQuery.noConflict(true);
+</script>
+
+<style>
+    body { font-family: Arial; padding:40px; }
+    .carousel { width:300px; height:150px; background:#eee; 
+                display:flex; align-items:center; justify-content:center;
+                font-size:22px; margin-bottom:20px; border-radius:8px; }
+    .widget { width:200px; padding:15px; border:1px solid #ccc; 
+              cursor:pointer; margin-bottom:10px; border-radius:6px; }
+    .active-widget { background:#dff1ff; border-color:#008cff; }
+    .modal-bg { position:fixed; top:0; left:0; right:0; bottom:0;
+                background:rgba(0,0,0,0.6); display:none; 
+                justify-content:center; align-items:center; }
+    .modal { background:#fff; padding:20px; border-radius:8px; width:300px; text-align:center; }
+    .tooltip { position:absolute; background:#000; color:#fff; padding:5px 8px;
+               border-radius:4px; font-size:12px; display:none; }
+</style>
+</head>
+
+<body>
+
+<h1>Multi jQuery Widgets</h1>
+
+<div class="carousel" id="slide">Slide 1</div>
+
+<div class="widget" data-tip="This is Widget A">Widget A</div>
+<div class="widget" data-tip="This is Widget B">Widget B</div>
+
+<button id="openModal">Open Notification</button>
+
+<div class="modal-bg" id="modalBg">
+    <div class="modal">
+        <h3>Notification</h3>
+        <p>This is a popup message.</p>
+        <button id="closeModal">Close</button>
+    </div>
+</div>
+
+<div class="tooltip" id="tooltipBox"></div>
+
+<script>
+jq1(function(){
+    let i = 1;
+    setInterval(function(){
+        i = (i % 3) + 1;
+        jq1("#slide").text("Slide " + i);
+    }, 2000);
+
+    jq1(".widget").click(function(){
+        jq1(".widget").removeClass("active-widget");
+        jq1(this).addClass("active-widget");
+    });
+});
+
+jq2(function(){
+    jq2("#openModal").click(function(){
+        jq2("#modalBg").fadeIn();
+    });
+
+    jq2("#closeModal").click(function(){
+        jq2("#modalBg").fadeOut();
+    });
+
+    jq2(".widget").hover(function(e){
+        let t = jq2(this).attr("data-tip");
+        jq2("#tooltipBox").text(t)
+            .css({top:e.pageY+10, left:e.pageX+10})
+            .fadeIn(150);
+    }, function(){
+        jq2("#tooltipBox").fadeOut(100);
+    });
+});
+</script>
+
+</body>
+</html>

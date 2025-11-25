@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registration Form Validation</title>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<style>
+    body { font-family: Arial; padding:40px; }
+    input { width:260px; padding:10px; display:block; margin-bottom:12px; border-radius:6px; border:1px solid #aaa; }
+    button { padding:10px 16px; cursor:pointer; }
+    #msg { margin-top:15px; padding:12px; display:none; border-radius:6px; background:#e6ffe6; color:#0a6b0a; }
+</style>
+</head>
+
+<body>
+
+<h1>Registration Form</h1>
+
+<input type="text" id="name" placeholder="Enter Name">
+<input type="email" id="email" placeholder="Enter Email">
+<input type="password" id="password" placeholder="Enter Password">
+
+<button id="submit">Register</button>
+
+<div id="msg"></div>
+
+<script>
+$(function(){
+
+    let usedEmails = ["test@mail.com","example@gmail.com"];
+
+    $("#submit").click(function(){
+        let name = $("#name").val().trim();
+        let email = $("#email").val().trim();
+        let pass = $("#password").val().trim();
+        let valid = true;
+
+        $("#name, #email, #password").css("border","1px solid #aaa");
+
+        if(name===""){
+            $("#name").css("border","2px solid red");
+            valid = false;
+        }
+
+        let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if(!emailPattern.test(email) || usedEmails.includes(email)){
+            $("#email").css("border","2px solid red");
+            valid = false;
+        }
+
+        if(pass.length < 8){
+            $("#password").css("border","2px solid red");
+            valid = false;
+        }
+
+        if(valid){
+            $("#msg").text("Registration Successful!").fadeIn(200);
+        } else {
+            $("#msg").hide();
+        }
+    });
+
+});
+</script>
+
+</body>
+</html>

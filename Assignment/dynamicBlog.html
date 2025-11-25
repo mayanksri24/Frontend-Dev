@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dynamic Blog Posts</title>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<style>
+    body { font-family: Arial; padding:40px; }
+    .controls button, #tagBtn { padding:8px 12px; margin-right:8px; cursor:pointer; }
+    .post-list { margin-top:20px; }
+    .post { padding:15px; border:1px solid #ccc; margin-bottom:12px; border-radius:8px; background:#fff; }
+    .tag { display:inline-block; padding:4px 8px; background:#e6f1ff; border-radius:5px; margin-right:6px; font-size:13px; }
+    .highlight { background:#fff7cc !important; }
+    #keyword { width:200px; padding:8px; }
+</style>
+</head>
+
+<body>
+
+<h1>Dynamic Blog Posts</h1>
+
+<div class="controls">
+    <button id="add">Add New Post</button>
+    <button id="prepend">Prepend Featured Post</button>
+    <button id="remove">Remove Last Post</button>
+</div>
+
+<input type="text" id="tagText" placeholder="Tag...">
+<button id="tagBtn">Add Tag</button>
+
+<br><br>
+
+<input type="text" id="keyword" placeholder="Highlight keyword...">
+<button id="searchKey">Search</button>
+
+<div class="post-list" id="posts">
+
+    <div class="post">
+        <h3>Learning JavaScript</h3>
+        <p>JavaScript is essential for web development.</p>
+    </div>
+
+    <div class="post">
+        <h3>Mastering Python</h3>
+        <p>Python is great for automation and data science.</p>
+    </div>
+
+    <div class="post">
+        <h3>Frontend with React</h3>
+        <p>React helps build fast and interactive UIs.</p>
+    </div>
+
+</div>
+
+<script>
+$(function(){
+
+    $("#add").click(function(){
+        $("#posts").append(`
+            <div class="post">
+                <h3>New Blog Post</h3>
+                <p>This is a newly added blog post.</p>
+            </div>
+        `);
+    });
+
+    $("#prepend").click(function(){
+        $("#posts").prepend(`
+            <div class="post">
+                <h3>🔥 Featured Post</h3>
+                <p>This is a top featured post.</p>
+            </div>
+        `);
+    });
+
+    $("#remove").click(function(){
+        $("#posts .post").last().remove();
+    });
+
+    $("#tagBtn").click(function(){
+        let tag = $("#tagText").val().trim();
+        if(tag==="") return;
+        $("#posts .post").first().find("h3").before(`<span class="tag">${tag}</span>`);
+        $("#posts .post").last().find("p").after(`<span class="tag">${tag}</span>`);
+        $("#tagText").val("");
+    });
+
+    $("#searchKey").click(function(){
+        let key = $("#keyword").val().toLowerCase();
+        $(".post").removeClass("highlight");
+        if(key==="") return;
+
+        $(".post").each(function(){
+            let t = $(this).text().toLowerCase();
+            if(t.includes(key)){
+                $(this).addClass("highlight");
+            }
+        });
+    });
+
+});
+</script>
+
+</body>
+</html>

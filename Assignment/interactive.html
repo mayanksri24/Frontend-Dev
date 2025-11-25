@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive FAQ</title>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        body { font-family: Arial; padding: 40px; }
+        .faq { width: 600px; margin-bottom: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 8px; }
+        .question { font-size: 20px; cursor: pointer; margin-bottom: 10px; }
+        .answer { display: none; margin-top: 10px; padding: 10px; background: #f9f9f9; border-radius: 5px; }
+        .highlight { background: #fff3e6; }
+        input { width: 100%; padding: 8px; margin-top: 10px; border-radius: 5px; border: 1px solid #aaa; }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Interactive FAQ</h1>
+</header>
+
+<main>
+
+<div class="faq">
+    <div class="question">What is your return policy?</div>
+    <div class="answer">
+        You can return products within 7 days.
+        <input type="text" placeholder="Ask more...">
+    </div>
+</div>
+
+<div class="faq">
+    <div class="question">How long does delivery take?</div>
+    <div class="answer">
+        Delivery takes 3–5 working days.
+        <input type="text" placeholder="Ask more...">
+    </div>
+</div>
+
+<div class="faq">
+    <div class="question">Do you offer customer support?</div>
+    <div class="answer">
+        Yes, 24/7 chat support is available.
+        <input type="text" placeholder="Ask more...">
+    </div>
+</div>
+
+</main>
+
+<footer>
+    <p>© 2025 FAQ Demo</p>
+</footer>
+
+<script>
+    $(document).ready(function () {
+        $(".question").click(function () {
+            $(this).next(".answer").toggle();
+        });
+
+        $(".question").hover(
+            function () { $(this).css("color", "blue"); },
+            function () { $(this).css("color", "black"); }
+        );
+
+        $(".question").dblclick(function () {
+            $(".answer").slideUp();
+        });
+
+        $("input").focus(function () {
+            $(this).closest(".faq").addClass("highlight");
+        });
+
+        $("input").blur(function () {
+            $(this).closest(".faq").removeClass("highlight");
+        });
+    });
+</script>
+
+</body>
+</html>

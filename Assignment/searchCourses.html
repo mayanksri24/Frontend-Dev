@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Search Courses</title>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<style>
+    body { font-family: Arial; padding: 40px; }
+    #search { width: 300px; padding: 10px; }
+    .course-list { margin-top: 20px; }
+    .course { font-size: 18px; margin-bottom: 10px; padding: 8px; border-radius: 6px; }
+    .highlight { background: yellow; }
+    #count { margin-top: 10px; font-weight: bold; }
+    #clear { padding: 8px 12px; margin-left: 10px; cursor: pointer; }
+</style>
+</head>
+
+<body>
+
+<h1>Search Courses</h1>
+
+<input type="text" id="search" placeholder="Search course...">
+<button id="clear">Clear</button>
+
+<div id="count">Matched: 0</div>
+
+<div class="course-list">
+    <div class="course">Java Programming</div>
+    <div class="course">Python for Beginners</div>
+    <div class="course">Full Stack Web Development</div>
+    <div class="course">Data Structures and Algorithms</div>
+    <div class="course">Machine Learning</div>
+    <div class="course">React Frontend Developer</div>
+    <div class="course">Cloud Computing with AWS</div>
+</div>
+
+<script>
+$(function(){
+
+    $("#search").keyup(function(){
+        let text = $(this).val().toLowerCase();
+        let count = 0;
+
+        $(".course").each(function(){
+            let item = $(this).text().toLowerCase();
+
+            $(this).removeClass("highlight");
+
+            if(item.includes(text) && text !== ""){
+                $(this).addClass("highlight").show();
+                count++;
+            } else if(text === ""){
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+
+        $("#count").text("Matched: " + count);
+    });
+
+    $("#clear").click(function(){
+        $("#search").val("");
+        $(".course").show().removeClass("highlight");
+        $("#count").text("Matched: 0");
+    });
+
+});
+</script>
+
+</body>
+</html>

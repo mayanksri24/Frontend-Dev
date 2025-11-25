@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome Page Greeting</title>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        body { font-family: Arial, sans-serif; padding: 40px; }
+        #greeting { font-size: 28px; font-weight: bold; margin-bottom: 10px; cursor: pointer; }
+        #welcome-msg { font-size: 18px; margin: 15px 0; }
+        button { padding: 10px 15px; margin-right: 10px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Dynamic Welcome Page</h1>
+</header>
+
+<main>
+    <section>
+        <div id="greeting"></div>
+        <p id="welcome-msg">We’re happy to have you visiting our website!</p>
+
+        <button id="change-greet-btn">Change Greeting</button>
+        <button id="toggle-welcome-btn">Toggle Welcome Message</button>
+    </section>
+</main>
+
+<footer>
+    <p>© 2025 Dynamic Greeting Demo</p>
+</footer>
+
+<script>
+    $(document).ready(function () {
+        function getGreeting() {
+            const hour = new Date().getHours();
+            if (hour < 12) return "Good Morning!";
+            else if (hour < 17) return "Good Afternoon!";
+            else return "Good Evening!";
+        }
+
+        $("#greeting").text(getGreeting());
+
+        $("#change-greet-btn").click(function () {
+            $("#greeting").text("Believe in yourself! You can do great things!");
+        });
+
+        $("#toggle-welcome-btn").click(function () {
+            $("#welcome-msg").toggle();
+        });
+
+        $("#greeting").click(function () {
+            alert("You clicked the greeting message!");
+        });
+    });
+</script>
+
+</body>
+</html>
